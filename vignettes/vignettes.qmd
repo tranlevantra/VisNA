@@ -1,0 +1,196 @@
+---
+title: "VisNA Demonstration"
+date: "November 2024"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    code-tools: true
+---
+
+```{r setup, include=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Introduction
+
+[VisNA](https://github.com/tranlevantra/VisNA) is an R visualisation package that comes with 2 main functions `ggNAs` and `ggpairsNAs` to support missing data patterns summary and aids in missing data mechanisms identification.
+
+Before we start, let's install the package and load the necessary libraries and dataset.
+
+```{r warning=FALSE, message=FALSE}
+# Install
+# if (!require("devtools")) install.packages("devtools")
+# devtools::install_github("tranlevantra/VisNA")
+
+# Load packages
+library(VisNA)
+library(ggplot2)
+library(dplyr)
+
+# Load dataset
+data(HMEQ)
+```
+
+# Data
+
+`HMEQ` is a open-sourced dataset that contains information on home equity loans and the credit risk associated with them. It is included in this package, available with `data(HMEQ)`, for demonstration purposes. 
+
+The dataset contains 5960 observations and 13 variables. The variables are as follows:
+
+- `BAD`: *binary* 1 = client defaulted on loan, 0 = loan repaid
+- `LOAN`:*numerical* Amount of the loan request
+- `MORTDUE`: *numerical* Amount due on existing mortgage
+- `VALUE`: *numerical* Value of current property
+- `REASON`: *categorical* DebtCon = debt consolidation, HomeImp = home improvement
+- `JOB`: *categorical* Occupational categories
+- `YOJ`: *numerical* Years at present job
+- `DEROG`: *numerical* Number of derogatory reports
+- `DELINQ`: *numerical* Number of delinquent credit lines
+- `CLAGE`: *numerical* Age of oldest credit line in months
+- `NINQ`: *numerical* Number of recent credit inquiries
+- `CLNO`: *numerical* Number of credit lines
+- `DEBTINC`: *numerical* Debt-to-income ratio
+
+# Main Usage
+
+## ggNAs
+
+The `ggNAs` function creates a bar plot that shows the count of missing and non-missing values for each variable in the dataset, with the option to group by a response variable.
+
+### Summary of Missing Data
+
+A bar plot that shows summary of missing data counts can be generated with default settings.
+
+As we can tell from the plot, missing data is a real issue with this dataset, which is also a common problem in real-world data.
+
+
+```{r}
+ggNAs(data = HMEQ) +
+  # Customize options with ggplo2 functions
+  scale_fill_discrete(
+    name = "Missing Status",               # New legend title
+    labels = c("Present", "Missing")       # New labels for legend items
+    ) +
+  geom_text(
+    aes(label = count),                    # Add count labels
+    position = position_stack(vjust = 0.5) # Position at the middle of the bar
+    ) +
+  labs(
+    title = "Missing Data Patterns in HMEQ dataset", # New title of the plot
+    y = "Variables",                                 # New Y-axis label
+    x = "Count")                                     # New X-axis label
+```
+
+
+### MNAR Investigation
+
+*Missing Not at Random (MNAR)* occurs when missingness depends on the levels of the subject of interest.
+
+In this plot, we examine missing data patterns in the independent variables by levels of the dependent variable BAD, which indicates whether a client defaulted on the loan. The dataset is imbalanced, with more clients repaying their loans than defaulting.
+
+While most variables have comparable percentages of missing data across levels of the response variable, the missing rate for DEBTINC differs between clients who defaulted and those who did not. This suggests an MNAR mechanism for DEBTINC, as clients who defaulted are more likely not to report their debt-to-income ratio.
+
+```{r}
+ggNAs(data = HMEQ, response = "BAD") +
+  # Begin customized options with ggplo2 functions
+  scale_fill_discrete(
+    name = "Missing Status",               # New legend title
+    labels = c("Present", "Missing")       # New labels for legend items
+    ) +
+  labs(
+    title = "Missing Data Patterns by Levels of Dependent Variable (BAD) in HMEQ dataset", # New title of the plot
+    x = "Count",                                                                          # New X-axis label
+    y = "")                                                                               # New Y-axis label
+```
+
+
+### MAR Investigation
+
+*Missing at Random (MAR)* occurs when the probability of missingness depends on observed data but not on the missing values themselves.
+
+The `ggpairsNAs` function visualizes missing data patterns between pairs of variables in the dataset:
+
+- The upper triangle displays side-by-side bar plots, showing the magnitude of missingness within each pair and across pairs.
+
+- The lower triangle uses Venn diagrams, where the intersection area is proportional to the percentage of shared missing information.
+
+- The diagonal presents the count of missing data for each variable.
+
+From the plot, a comparable magnitude of missingness and a high percentage of shared missing information is evident between `CLAGE` and `CLNO`. This suggests a MAR mechanism for these two variables. In other words, if `CLAGE` (age of the oldest credit line, in months) is missing, `CLNO` (number of credit lines) is also likely to be missing.
+
+```{r message=FALSE, warning=FALSE}
+ggpairsNAs(data = HMEQ) +
+  labs(
+    title = "Pairwise Missing Data Patterns in HMEQ dataset" # New title of the plot
+    )
+```
+
+
+# Advanced Usage
+
+This package effectively integrates with tidyverse workflow and supports further customisation of the plots using ggplot2 and GGally functions.
+
+## Numerical response variable 
+
+The `ggNAs` function can be used to study the missing data patterns by a numerical response variable, however, binning the response variable into categories is recommended.
+
+```{r}
+# Binning the NINQ variable into categories
+HMEQ <- HMEQ %>%
+  mutate(NINQ = case_when(
+    NINQ == 0 ~ "No Inquiries",
+    NINQ %in% 1:2 ~ "Low Inquiries",
+    NINQ %in% 3:5 ~ "Moderate Inquiries",
+    NINQ %in% 6:10 ~ "High Inquiries",
+    NINQ >= 11 ~ "Very High Inquiries",
+    TRUE ~ as.character(NINQ)  
+  ))
+
+# Investigating missing data patterns by NINQ
+ggNAs(data = HMEQ, response = "NINQ")
+```
+
+
+## Intersection terms
+
+The `ggNAs` is particularly useful when we want to investigate the missing data patterns in the dataset by multiple response variables.
+
+```{r}
+ggNAs(data = HMEQ, 
+      response = c("BAD", "REASON"), # Interactions between BAD and REASON
+      ncol = 2)                      # Arrange the plots in 2 columns
+```
+
+
+
+## Customisation with ggplot2 and GGally
+
+The `ggNAs` and `ggpairsNAs` functions return ggplot2 and GGally objects, respectively. This allows for further customisation using ggplot2 and GGally functions.
+
+- From previous examples, we have customised the plots by adding labels, changing the legend title, and removing the legend. More customization options can be found in the [ggplot2](https://ggplot2.tidyverse.org) and [GGally](https://github.com/ggobi/ggally) documentation.
+
+- Built-in customisation of this package includes changing the colour palette of `ggpairsNAs`, and adjusting the column arrangement in the plot grid of `ggNAs`. More information can be found in the package documentation.
+
+
+```{r eval=FALSE}
+# From R console, type the following to view the documentation
+?VisNA::ggNAs()
+?VisNA::ggpairsNAs()
+```
+
+
+# References
+
+Rubin, D. B. (1976). Inference and missing data. Biometrika, 63(3), 581-592.
+
+Wickham, H., Navarro, D., & Pedersen, T. L. (2023). ggplot2: Elegant graphics for data analysis (3rd ed.). Springer.
+
+
+
+
+
+
