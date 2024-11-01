@@ -19,11 +19,13 @@ There are three types of missing data mechanisms (Rubin, 1976):
   data, meaning that the missing values themselves influence whether
   they are missing.
 
-In practice, MCAR is rare, with most missing data mechanisms falling
-under MAR or MNAR. **VisNA** is particularly helpful in visualizing
-missing patterns and assisting in identifying these two common
-mechanisms, making it a valuable tool in the preprocessing and analysis
-of incomplete datasets.
+The detection of missing data mechanisms incurs appropriate handling
+strategies, such as imputation methods, to avoid bias and improve the
+quality of the analysis. In practice, MCAR is rare, with most missing
+data mechanisms falling under MAR or MNAR. **VisNA** is particularly
+helpful in visualizing missing patterns and assisting in identifying
+these two common mechanisms, making it a valuable tool in the
+preprocessing and analysis of incomplete datasets.
 
 ## Installation
 
@@ -39,27 +41,9 @@ library(VisNA)
 
 ## Usage
 
-Usage to be found in below vignettes for this package two main
-functions:
-
-- [ggNAs](https://cran.r-project.org/web/packages/VisNA/vignettes/Introduction_to_VisNA.html)
-
-- [ggpairsNAs](https://cran.r-project.org/web/packages/VisNA/vignettes/Missing_Data_Mechanisms.html)
-
-This package supports with missing data patterns summary and aids in
-missing data mechanisms identification.
-
-<div style="display: flex; justify-content: center;">
-
-<img src="fig/Missing Data Patterns by Levels of Dependent Variable (BAD) in HMEQ dataset.png" width="70%">
-
-</div>
-
-<div style="display: flex; justify-content: center;">
-
-<img src="fig/Pairwise Missing Data Patterns in HMEQ dataset.png" width="65%">
-
-</div>
+Please find in this
+[vignette](https://tranlevantra.github.io/VisNA/vignettes.html) a
+detailed guide on how to use the package.
 
 ## References
 
