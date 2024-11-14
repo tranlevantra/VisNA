@@ -1,33 +1,32 @@
 VisNA
 ================
 
-**VisNA** is an R package for visualizing and analyzing missing data
-patterns, helping users identify missing data mechanisms to improve data
-analysis and modeling.
+**VisNA** is an R package designed to visualise and analyse missing data
+patterns, aiding users in understanding the reasons behind missing data
+to enhance data analysis and modeling.
 
-There are three types of missing data mechanisms (Rubin, 1976):
+The package identifies three key types of missing data according to
+Rubin (1976):
 
-- Missing Completely at Random (MCAR): Missingness is unrelated to any
-  data (observed or unobserved). Formal tests, such as Little’s MCAR
-  test, and visualization tools, like mosaic plots, are often used to
-  detect MCAR (Templ, 2022).
+- *Missing Completely at Random (MCAR)*: Data is missing without
+  relation to any other data.
 
-- Missing at Random (MAR): The probability of missingness is related to
-  observed data but not to the missing values themselves.
+- *Missing at Random (MAR)*: Missing data correlates with visible data
+  but not with the missing data itself.
 
-- Missing Not at Random (MNAR): Missingness depends on the unobserved
-  data, meaning that the missing values themselves influence whether
-  they are missing.
+- *Missing Not at Random (MNAR)*: Missing data is linked to unseen
+  aspects of the data.
 
-The detection of missing data mechanisms incurs appropriate handling
-strategies, such as imputation methods, to avoid bias and improve the
-quality of the analysis. In practice, MCAR is rare, with most missing
-data mechanisms falling under MAR or MNAR. **VisNA** is particularly
-helpful in visualizing missing patterns and assisting in identifying
-these two common mechanisms, making it a valuable tool in the
-preprocessing and analysis of incomplete datasets.
+Statistical tests like Little’s MCAR can be complex and only confirm the
+presence of missing data mechanisms without pinpointing specific
+locations. In contrast, **VisNA** enhances existing visualisation tools
+by clearly highlighting these patterns, especially aiding in
+distinguishing between MAR and MNAR. This makes it an essential tool for
+analysing incomplete datasets.
 
 ## Installation
+
+You can install the development version of **VisNA** from GitHub with:
 
 ``` r
 if (!require("devtools")) install.packages("devtools")
@@ -45,18 +44,38 @@ Please find in this
 [vignette](https://tranlevantra.github.io/VisNA/vignettes.html) a
 detailed guide on how to use the package.
 
+## Acknowledgements
+
+VisNA was developed as part of the `MATH2191 Applied Research Project`
+at RMIT University. I deeply appreciate the guidance of Dr. Irene Hudson
+and Dr. Yan Wang. Their focus on understanding the mechanisms behind
+missing data before considering any imputation set the foundation for
+this package.
+
+Special thanks to [Asma Ali](https://github.com/AsmaLi1326) for her
+insightful feedback on design and her unwavering emotional support
+throughout this project.
+
 ## References
 
-Rubin, D. B. (1976). Inference and missing data. Biometrika, 63(3),
-581-592.
+Rubin, D. B. (1976). Inference and missing data. *Biometrika*, 63(3),
+581–592. <https://doi.org/10.1093/biomet/63.3.581>
 
-Templ, M. (2022). Missing Data. In Handbook of Computational Statistics
-(pp. 1-30). Springer, Cham.
+Templ, M. (2023). *Visualization and Imputation of Missing Values: With
+Applications in R* (1st ed.). Springer International Publishing AG.
+<https://doi.org/10.1007/978-3-031-30073-8>
+
+H. Wickham. *ggplot2: Elegant Graphics for Data Analysis*.
+Springer-Verlag New York, 2016.
+
+Schloerke B, Cook D, Larmarange J, Briatte F, Marbach M, Thoen E, Elberg
+A, Crowley J (2024). *GGally: Extension to ‘ggplot2’*. R package version
+2.2.1, <https://CRAN.R-project.org/package=GGally>.
 
 ## Contribution
 
-We welcome contributions! Feel free to open a pull request or submit
-issues.
+Feel free to open a pull request or submit issues. I am always open to
+feedback and suggestions for improvement.
 
 ## License
 
