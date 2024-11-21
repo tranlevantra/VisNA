@@ -46,11 +46,10 @@ detailed guide on how to use the package.
 
 ## Acknowledgements
 
-VisNA was developed as part of the `MATH2191 Applied Research Project`
-at RMIT University. I deeply appreciate the guidance of Dr. Irene Hudson
-and Dr. Yan Wang. Their focus on understanding the mechanisms behind
-missing data before considering any imputation set the foundation for
-this package.
+VisNA was developed as part of my WIL course at RMIT University. I
+deeply appreciate the guidance of Prof. Irene Hudson and A. Prof. Yan
+Wang. Their focus on understanding the mechanisms behind missing data
+before considering any imputation set the foundation for this package.
 
 Special thanks to [Asma Ali](https://github.com/AsmaLi1326) for her
 insightful feedback on design and her unwavering emotional support
