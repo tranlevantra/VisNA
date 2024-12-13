@@ -29,18 +29,11 @@
 #' @export
 ggpairsNAs <- function(data, fill = c("#01BFC4", "#007a7c")) {
 
-  data <- data %>%
-    mutate(across(
-      where(is.character),
-      as.factor  # First convert characters to factors
-    )
-    ) %>%
-    mutate(
-      across(
-        where(is.factor),
-        ~ as.numeric(as.factor(.))  # Convert factors (including converted characters) to numeric
-      )
-    )
+  # Convert character columns to factors
+  data <- data.frame(lapply(data, function(x) if(is.character(x)) factor(x) else x))
+
+  # Convert factor columns to numeric
+  data <- data.frame(lapply(data, function(x) if(is.factor(x)) as.numeric(x) else x))
 
   # Diagonal FNC
   diagonal_fnc <- function(data, mapping, ...) {
